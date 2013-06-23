@@ -1,0 +1,27 @@
+.form_label{
+	float:left;
+	width: 30%;
+	margin-left: 5%;
+	margin-right: 5%;
+	text-align: right;
+	padding-top: 1em;
+}
+
+.form_value{
+	float:left;
+	width: 55%;
+	margin-right: 5%; 
+	text-align: left;
+}
+
+.form_value input{
+	width: 100%;
+}
+
+.redbg{
+	background-color: #ff5555;
+}
+
+.greenbg{
+	background-color: #00ff00;
+}
