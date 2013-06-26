@@ -222,7 +222,7 @@ function updateWithStatus(status){
 	$("#status").html(getDisplayStatus(status.status));
 	$("#chips").html("" + status.chips);
 	
-	if(lastStatus.card1 != status.card1 || lastStatus.card2 != status.card2){
+	if(lastStatus && (lastStatus.card1 != status.card1 || lastStatus.card2 != status.card2)){
 		$("#card1").attr("src", "img/card_bg.jpg");
 		$("#card2").attr("src", "img/card_bg.jpg");
 	}
