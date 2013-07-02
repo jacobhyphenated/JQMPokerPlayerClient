@@ -69,6 +69,7 @@ $("#select_game").on("pageshow",function(event){
 $("#poker").on('pageinit', function(event){
 	$("#action_group").hide();
 	$("#card_wrapper").hide();
+	$("#sit_in").hide();
 	
 	$("#leaveGameButton").on('click',function(event){
 		sessionStorage.gameId = "";
@@ -185,6 +186,28 @@ $("#poker").on('pageinit', function(event){
 		});//end AJAX
 	});//end fold button
 	
+	$(".sitInButton").on("click", function(){
+		$("#sit_in").hide();
+		$.ajax({
+			url: sessionStorage.serverName + "/sitin",
+			type: "POST",
+			data: {"playerId": sessionStorage.playerId },
+			dataType: "jsonp",
+			success: function(data) {
+				if(!data.success){
+					$("#actionBad").popup("open");
+					return;
+				}
+				$("#status").html("Waiting");
+				statusUpdate();
+				postAction();
+			},
+			error: function(){
+				$("#actionBad").popup("open");
+			}
+		});//end AJAX
+	});//end sit in button
+	
 });//End Poker Game Page Init
 
 $("#poker").on('pageshow', function(event){
@@ -225,6 +248,13 @@ function updateWithStatus(status){
 	if(lastStatus && (lastStatus.card1 != status.card1 || lastStatus.card2 != status.card2)){
 		$("#card1").attr("src", "img/card_bg.jpg");
 		$("#card2").attr("src", "img/card_bg.jpg");
+	}
+	
+	if(status.status == "SIT_OUT_GAME"){
+		$("#sit_in").show();
+	}
+	else{
+		$("#sit_in").hide();
 	}
 	
 	lastStatus = status;
@@ -296,6 +326,9 @@ function getDisplayStatus(statusCode){
 	}
 	if(statusCode == "ELIMINATED"){
 		return "Out of Game";
+	}
+	if(statusCode == "SIT_OUT_GAME"){
+		return "Sitting Out";
 	}
 }
 
