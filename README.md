@@ -5,7 +5,7 @@ This is a jQuery Mobile application, designed to be cross browser/device. This a
 
 Version
 ----
-This application is designed to work with Poker Server API Version 0.3. This is subject to change.
+This application is designed to work with Poker Server API Version 0.4. This is subject to change.
 
 Technical Stuff
 ---
