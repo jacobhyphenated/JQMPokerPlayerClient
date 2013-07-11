@@ -242,7 +242,7 @@ function updateWithStatus(status){
 		$("#card_wrapper").hide();
 	}
 	
-	$("#status").html(getDisplayStatus(status.status));
+	$("#status").html(getDisplayStatus(status.status, status.smallBlind, status.bigBlind));
 	$("#chips").html("" + status.chips);
 	
 	if(lastStatus && (lastStatus.card1 != status.card1 || lastStatus.card2 != status.card2)){
@@ -257,6 +257,10 @@ function updateWithStatus(status){
 		$("#sit_in").hide();
 	}
 	
+	var statusChange =  true;
+	if(lastStatus){
+		statusChange = lastStatus.status != status.status;
+	}
 	lastStatus = status;
 	
 	if(!(status.status == "ACTION_TO_CALL" || status.status == "ACTION_TO_CHECK")){
@@ -279,18 +283,28 @@ function updateWithStatus(status){
 		$("#call_layout").hide();
 		$("#check_layout").show();
 	}
-	$("#betslider").attr("max", status.chips - amountToCall);
-	$("#betslider").attr("min", amountToCall);
+	if(statusChange){
+		var minBet = Math.max(status.bigBlind, amountToCall);
+		$("#betslider").attr("max", status.chips - amountToCall);
+		$("#betslider").attr("min", minBet);
+		$("#betslider").val(minBet);
+		$("#betslider").slider("refresh");
+	}
+	
 }
 
 function postAction(){
 	$("#betslider").val(0);
-	$("#betslider").slider("refresh");
+	if(lastStatus.bigBlind){
+		$("#betslider").val(lastStatus.bigBlind);
+	}
+	
 	$(".callButton .ui-btn-text").html("Call");
 	$(".betButton .ui-btn-text").html("Bet");
+	$("#betslider").slider("refresh");
 }
 
-function getDisplayStatus(statusCode){
+function getDisplayStatus(statusCode, smallBlind, bigBlind){
 	if(statusCode == "NOT_STARTED"){
 		return "Not Started";
 	}
@@ -310,10 +324,10 @@ function getDisplayStatus(statusCode){
 		return "Won Hand";
 	}
 	if(statusCode == "POST_SB"){
-		return "Small Blind";
+		return "Small Blind (" + smallBlind + ")";
 	}
 	if(statusCode == "POST_BB"){
-		return "Big Blind";
+		return "Big Blind (" + bigBlind +")";
 	}
 	if(statusCode == "ACTION_TO_CALL"){
 		return "Call Bet";
